@@ -1,0 +1,19 @@
+<h1>Actors Catalog</h1>
+
+<table>
+  <tr>
+    <th>Actor Name</th>
+  </tr>
+  <% actor_list.each do |name| %>
+  <tr>
+    <td><a href="/actors/<%= name['name'] %>"><%= name['name'] %></td>
+  </tr>
+  <% end %>
+</table>
+
+<!-- <h1>Submit Your URL!</h1>
+<form action="/" method="post">
+  <label for="long_url">Your Long URL</label>
+  <input type="text" name="long_url">
+  <input type="submit" value="Shorten!">
+</form> -->

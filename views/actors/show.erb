@@ -1,0 +1,16 @@
+<h1>Actor Name: <%= actor_info[0]['actor'] %></h1>
+
+<table>
+  <tr>
+    <th>Movie</th>
+    <th>Year</th>
+    <th>Role</th>
+  </tr>
+  <% actor_info.each do |info| %>
+  <tr>
+    <td><%= info['movie'] %></td>
+    <td><%= info['year'] %></td>
+    <td><%= info['role'] %></td>
+  </tr>
+  <% end %>
+</table>

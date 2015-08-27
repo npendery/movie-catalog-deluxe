@@ -1,0 +1,20 @@
+<h1>Movies Catalog</h1>
+
+<table>
+  <tr>
+    <th>Movie Title</th>
+    <th>Year Released</th>
+    <th>Genre</th>
+    <th>Studio</th>
+    <th>Movie Rating</th>
+  </tr>
+  <% movie_list.each do |name| %>
+  <tr>
+    <td><a href="/movies/<%= name['title'] %>"><%= name['title'] %></td>
+    <td><%= name['year'] %></td>
+    <td><%= name['genre'] %></td>
+    <td><%= name['studio'] %></td>
+    <td><%= name['rating'] %></td>
+  </tr>
+  <% end %>
+</table>

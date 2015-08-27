@@ -1,0 +1,16 @@
+<h1>Movie Name: <%= movie_info[0]['movie'] %></h1>
+<h1>Movie Genre: <%= movie_info[0]['genre'] %></h1>
+<h1>Movie Studio: <%= movie_info[0]['studio'] %></h1>
+
+<table>
+  <tr>
+    <th>Actor</th>
+    <th>Role</th>
+  </tr>
+  <% movie_info.each do |info| %>
+  <tr>
+    <td><a href="/actors/<%= info['actor'] %>"><%= info['actor'] %></td>
+    <td><%= info['role'] %></td>
+  </tr>
+  <% end %>
+</table>
