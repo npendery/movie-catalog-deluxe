@@ -9,8 +9,12 @@
   </tr>
   <% movie_info.each do |info| %>
   <tr>
-    <td><a href="/actors/<%= info['actor'] %>"><%= info['actor'] %></td>
+    <td><a href="/actors/<%= info['id'] %>"><%= info['actor'] %></td>
     <td><%= info['role'] %></td>
   </tr>
   <% end %>
 </table>
+
+<p><a href="/movies">Movies Page</p>
+
+<p><a href="/main">Main Page</p>

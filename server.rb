@@ -17,39 +17,48 @@ def get_movies
   db_connection { |conn| conn.exec("SELECT * FROM movies") }
 end
 
+get "/main" do
+  erb :main
+end
+
+get "/" do
+  redirect "/main"
+end
+
 get "/actors" do
   actor_list = db_connection do |conn|
     conn.exec("
-    SELECT name
+    SELECT actors.name, actors.id as id
     FROM actors
-    WHERE name LIKE 'Tom%'
-    ORDER BY name ASC
+    WHERE actors.name LIKE 'Tom%'
+    ORDER BY actors.name ASC
     LIMIT 10")
   end
 # binding.pry
   erb :'actors/index', locals: { actor_list: actor_list }
 end
 
-get "/actors/:actor_name" do
-  actor_name = params[:actor_name]
+get "/actors/:actor_id" do
+  actor_id = params[:actor_id]
   actor_info = db_connection do |conn|
     conn.exec("
-    SELECT actors.name as Actor, movies.title as Movie, movies.year as Year, cast_members.character as Role
+    SELECT actors.name as Actor, movies.title as Movie, movies.year as Year, cast_members.character as Role, actors.id as id
     FROM actors
-    JOIN cast_members ON (actors.id = cast_members.actor_id)
+    JOIN cast_members ON (actors.id = cast_members.id)
     JOIN movies ON (movies.id = cast_members.movie_id)
-    WHERE name = $1", [actor_name])
+    WHERE actors.id = $1", [actor_id])
   end
-# binding.pry
+  # binding.pry
+
   erb :'actors/show', locals: {
-    actor_name: actor_name,
+    actor_id: actor_id,
     actor_info: actor_info}
 end
 
 get "/movies" do
   movie_list = db_connection do |conn|
     conn.exec("
-    SELECT movies.title, movies.year, movies.rating, genres.name as genre, studios.name AS studio
+    SELECT movies.title, movies.year, movies.rating, genres.name as genre, studios.name AS studio, movies.id as id
     FROM movies
     JOIN studios ON (movies.studio_id = studios.id)
     JOIN genres ON (movies.genre_id = genres.id)
@@ -60,46 +69,48 @@ get "/movies" do
   erb :'movies/index', locals: { movie_list: movie_list }
 end
 
-get "/movies/:movie_title" do
-  movie_title = params[:movie_title]
+get "/movies/:movie_id" do
+  movie_id = params[:movie_id]
   movie_info = db_connection do |conn|
     conn.exec("
-    SELECT actors.name as Actor, movies.title as Movie, movies.year as Year, cast_members.character as Role, genres.name as genre, studios.name as studio
+    SELECT actors.name as Actor, movies.title as Movie, movies.year as Year, cast_members.character as Role, genres.name as genre, studios.name as studio, movies.id as id
     FROM movies
     JOIN studios ON (movies.studio_id = studios.id)
     JOIN genres ON (movies.genre_id = genres.id)
     JOIN cast_members ON (movies.id = cast_members.movie_id)
     JOIN actors ON (actors.id = cast_members.actor_id)
-    WHERE movies.title = $1", [movie_title])
+    WHERE movies.id = $1", [movie_id])
   end
 # binding.pry
   erb :'movies/show', locals: {
-    movie_title: movie_title,
+    movie_id: movie_id,
     movie_info: movie_info}
 end
 
-# post "/" do
-#   long_url = params[:long_url]
-#   short_url = create_short_url
-#
-#   if unique_long_url?(long_url)
-#     db_connection do |conn|
-#       conn.exec_params("INSERT INTO urls (long_url, short_url) VALUES ($1, $2)", [long_url, short_url])
-#     end
-#     redirect "/"
-#   else
-#     flash[:error] = "Hey, that URL has already been submitted!"
-#     redirect "/"
+# get "/movies/orderyear" do
+#   year_list = db_connection do |conn|
+#     conn.exec("
+#     SELECT movies.title, movies.year, movies.rating, genres.name as genre, studios.name AS studio, movies.id as id
+#     FROM movies
+#     JOIN studios ON (movies.studio_id = studios.id)
+#     JOIN genres ON (movies.genre_id = genres.id)
+#     ORDER BY movies.year ASC, movies.title ASC
+#     LIMIT 20")
 #   end
+# # binding.pry
+#   erb :'movies/year_order', locals: { year_list: year_list }
 # end
 #
-# get "/:short_url" do
-#   short_url = params[:short_url]
-#
-#   long_result = db_connection do |conn|
-#     conn.exec("SELECT long_url FROM urls WHERE short_url = $1", [short_url])
+# get "/movies/orderrating" do
+#   rating_list = db_connection do |conn|
+#     conn.exec("
+#     SELECT movies.title, movies.year, movies.rating, genres.name as genre, studios.name AS studio, movies.id as id
+#     FROM movies
+#     JOIN studios ON (movies.studio_id = studios.id)
+#     JOIN genres ON (movies.genre_id = genres.id)
+#     ORDER BY movies.rating DESC, movies.title ASC
+#     LIMIT 20")
 #   end
-#   long_url = long_result.first["long_url"]
-#
-#   redirect long_url
+# # binding.pry
+#   erb :'movies/ratings_order', locals: { rating_list: rating_list }
 # end
